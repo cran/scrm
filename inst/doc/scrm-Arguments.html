@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>General Syntax</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+
+
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<p>scrm is uses a syntax compatible with the popular program <a href="http://home.uchicago.edu/%7Erhudson1/source/mksamples.html">ms</a>. There are, however, a few differences to ms: </p>
+
+<ul>
+<li>scrm can not simulate 
+
+<ul>
+<li>gene conversions (<code>-c</code> in ms) and</li>
+<li>a fix number of segregating sites (<code>-s</code>),</li>
+</ul></li>
+<li>the option <code>-L</code> produces a slightly different output and</li>
+<li>it additionally implements the flags 
+
+<ul>
+<li><code>-l</code> (approximation), </li>
+<li><code>-sr</code> (changing recombination rate), </li>
+<li><code>-st</code> (changing mutation rate),</li>
+<li><code>-eI</code> (sampling at past time points) and</li>
+<li><code>-oSFS</code> (generates frequency spectra). </li>
+</ul></li>
+</ul>
+
+<p>For all other options, you can also refer to <a href="https://webshare.uchicago.edu/users/rhudson1/Public/ms.folder/msdoc.pdf?ticket=t_DunQ7c99">ms&#39; manual</a> to get a detailed description of what the commands are doing. scrm should happily execute any ms command that does not contain <code>-c</code> and <code>-s</code>. Also scrm has somewhat stricter requirements regarding the order of arguments if population admixture (<code>-es</code>) is involved.</p>
+
+<h2>General Syntax</h2>
+
+<p>The command line options for scrm look like</p>
+
+<pre><code>scrm &lt;nsamp&gt; &lt;rep&gt; [...]
+</code></pre>
+
+<p>where <em>nsamp</em> is the total number of samples taken (in all populations and at all times), <em>rep</em> is the number of independent loci/chromosomes to generate and the <code>[...]</code> is an optional placeholder for an arbitrary number of command flags described below.</p>
+
+<h2>Basic Parameters</h2>
+
+<h3>Recombination</h3>
+
+<ul>
+<li><code>-r &lt;R&gt; &lt;L&gt;</code>: Set the recombination rate to <em>R = 4*N0*r</em> and the length of all loci to L base pairs. <em>r</em> is the recombination rate per locus.</li>
+<li><code>-l &lt;l&gt;</code>: Use approximation rather than simulating the exact ARG. Within a sliding window of length <em>l</em> base pairs all linkage information is considered when building the genealogy. To positions outside of this window, some linkage  is ignored. Setting <em>l=0</em> produces the SMC&#39; and <em>l=-1</em> or <em>l&gt;L</em> deactivates the approximation. </li>
+</ul>
+
+<h3>Population structure &amp; migration</h3>
+
+<p>In all commands, migrations rates <em>M = 4*N0*m</em>, where <em>m</em> is the fraction of a population that is replaced with migrants from other populations each generation (looking forwards in time).</p>
+
+<ul>
+<li><code>-I &lt;npop&gt; &lt;s1&gt; ... &lt;sn&gt; [&lt;M&gt;]</code>: Use an island model with <em>npop</em> populations, where <em>s1</em> to <em>sn</em> individuals are sampled from population 1 to n, respectively. Optionally assume a symmetric migration rate of <em>M</em>.</li>
+<li><code>-M &lt;M&gt;</code>: Assume a symmetric migration rate of <em>M/(npop-1)</em>. </li>
+<li><code>-m &lt;i&gt; &lt;j&gt; &lt;M&gt;</code>: Set the migration rate from population <em>j</em> to population <em>i</em> to <em>M</em> (looking forward in time).</li>
+<li><code>-ma &lt;M11&gt; &lt;M21&gt; ... &lt;M21&gt; ...</code>: Set the migration matrix (Dimension is <em>npop x npop</em>). Diagonals elements are ignored but required.<br/></li>
+</ul>
+
+<h3>Population size changes</h3>
+
+<ul>
+<li><code>-n &lt;i&gt; &lt;n&gt;</code>: Set the present day size of population <em>i</em> to <em>n*N0</em>.</li>
+<li><code>-G &lt;a&gt;</code>: Set the exponential growth rate of all populations to <em>a</em>.</li>
+<li><code>-g &lt;i&gt; &lt;a&gt;</code>: Set the exponential growth rate of population <em>i</em> to <em>a</em>.</li>
+</ul>
+
+<h3>Summary Statistics</h3>
+
+<ul>
+<li><code>-t &lt; $\theta$ &gt;</code>: Set the mutation rate to \(\theta = 4N_0u\), where <em>u</em> is the neutral mutation rate per locus. If this options is given, scrm generates the segregating sites output.</li>
+<li><code>-T</code>: Print the local genealogies in newick format.</li>
+<li><code>-O</code>: Print the local genealogies in the <code>oriented forest</code> format as described in <a href="http://dx.doi.org/10.1016/j.tpb.2014.05.001">Kelleher <em>et al.</em> (2014)</a> [since v1.2].</li>
+<li><code>-L</code>: Print the TMRCA and the local tree length for each segment (behaves different to ms).</li>
+<li><code>-oSFS</code>: Print the site frequency spectrum. Requires that the mutation rate \(\theta\) is given with the &#39;-t&#39; option.</li>
+<li><code>-SC [ms|rel|abs]</code>: Scaling of sequence positions. Either relative to the locus length between 0 and 1 (<code>rel</code>), absolute in base pairs (<code>abs</code>) or <code>ms</code>&#39;s scaling (default) where the positions in the <em>segregating sites</em> output are relative, and the positions in the trees output are absolute (<code>ms</code>)[since v1.3]. </li>
+</ul>
+
+<h3>Reproducibility</h3>
+
+<ul>
+<li><code>-seed &lt;SEED&gt; [&lt;SEED2&gt; &lt;SEED3&gt;]</code>: Specifies a seed for the simulation. You can input up to three non-negative numbers. If no seed is given, scrm randomly samples one using entropy provided by the operating system. To reproduce a previous simulation, use the single number in the second line of the output.</li>
+</ul>
+
+<h2>Time specific parameters</h2>
+
+<p>The command this section all have a time <em>t</em> as first parameter. Changes made by the commands affect the time from <em>t</em> further back into the past. All times in units of <em>4*N0</em> generations.</p>
+
+<h3>Population structure &amp; migration</h3>
+
+<ul>
+<li><code>-eI &lt;t&gt; &lt;s1&gt; ... &lt;sn&gt;</code>: Sample <em>s1</em> to <em>sn</em> individuals are from population <em>1</em> to <em>n</em>, respectively, at time <em>t</em>. </li>
+<li><code>-eM &lt;t&gt; &lt;M&gt;</code>: Assume a symmetric migration rate of <em>M/(npop-1)</em> at time <em>t</em>.</li>
+<li><code>-em &lt;t&gt; &lt;i&gt; &lt;j&gt; &lt;M&gt;</code>: Set the migration rate from population <em>j</em> to population <em>i</em> to <em>M</em> (looking forward in time) at time <em>t</em>.</li>
+<li><code>-ema &lt;npop&gt; &lt;M11&gt; &lt;M12&gt; ... &lt;M21&gt; ...</code>: Set the migration matrix (Dimension is <em>npop x npop</em>). Diagonals elements are ignored but required.<br/></li>
+</ul>
+
+<h3>Population size changes</h3>
+
+<ul>
+<li><code>-eN &lt;t&gt; &lt;n&gt;</code>: Set the size of all populations to <em>n*N0</em> at time <em>t</em>.</li>
+<li><code>-en &lt;t&gt; &lt;i&gt; &lt;n&gt;</code>: Set the size of population <em>i</em> to <em>n*N0</em> at time <em>t</em>. </li>
+<li><code>-eg &lt;t&gt; &lt;i&gt; &lt;a&gt;</code>: Set the exponential growth rate of population <em>i</em> to <em>a</em> at time <em>t</em>.</li>
+<li><code>-eG &lt;t&gt; &lt;a&gt;</code>: Set the exponential growth rate of all populations to <em>a</em> at time <em>t</em>.</li>
+</ul>
+
+<h3>Population Splits &amp; Merges</h3>
+
+<ul>
+<li><code>-es &lt;t&gt; &lt;i&gt; &lt;p&gt;</code>: Population admixture, replaces a fraction of <em>1-p</em> of population <em>i</em> with individuals a from population <em>npop + 1</em> which is ignored afterwards (viewed forward in time). Technically (and looking backwards in time), a new population <em>n+1</em> with size <em>N0</em> is created. Migration (to &amp; from) and growth rates for this population are initially 0. Each lines in population <em>i</em> is moved to the new population with probability <em>1-p</em>. Please sort multiple <code>-es</code> arguments by their time to avoid confusion about the numbering of populations. Please give the arguments that affect the whole population (<code>-M</code>, <code>-N</code>, <code>-G</code> &amp; <code>-ma</code>) before giving the first <code>-es</code>. Also, their timed equivalents (<code>-eM</code>, <code>-eN</code>, <code>-eG</code>, <code>-eI</code> &amp; <code>-ema</code>) position on the command line events must be the same as in time (only relative to <code>-es</code>). 
+<code>scrm</code> throws an error if any of these conditions is not met. In doubt, just sort all command line arguments by time.</li>
+<li><code>-ej &lt;t&gt; &lt;i&gt; &lt;j&gt;</code>: Adds a specialization event in population <em>i</em> that creates population <em>j</em> (forwards in time). Technically (and looking backwards in time), it merges population <em>j</em> into population <em>i</em> at time <em>t</em>. Migration rates into population <em>j</em> are set to 0 for the time further back into the past.</li>
+</ul>
+
+<h2>Sequence specific parameters</h2>
+
+<p>The following commands change the model parameters from at a sequence position <em>s</em>.</p>
+
+<ul>
+<li><code>-sr &lt;s&gt; &lt;R&gt;</code>: Set the recombination rate to <em>R</em> starting at position <em>s</em>.</li>
+<li><code>-st &lt;s&gt; &lt;$\theta$&gt;</code>: Set the mutation rate to \(\theta\) starting at position <em>s</em>. </li>
+</ul>
+
+</body>
+
+</html>
