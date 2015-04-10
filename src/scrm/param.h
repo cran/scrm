@@ -1,7 +1,7 @@
 /*
  * scrm is an implementation of the Sequential-Coalescent-with-Recombination Model.
  * 
- * Copyright (C) 2013, 2014 Paul R. Staab, Sha (Joe) Zhu and Gerton Lunter
+ * Copyright (C) 2013, 2014 Paul R. Staab, Sha (Joe) Zhu, Dirk Metzler and Gerton Lunter
  * 
  * This file is part of scrm.
  * 
@@ -25,6 +25,7 @@
 
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <stdexcept>
 #include <random>
@@ -63,9 +64,11 @@ class Param {
     argc_i = other.argc_i;
     argv_ = other.argv_;
     random_seed_ = other.random_seed_;  
+    seed_set_ = other.seed_set_;
     directly_called_ = other.directly_called_;
     help_ = other.help_;
     version_ = other.version_;
+    print_model_ = other.print_model_;
     std::swap(argv_vec_, other.argv_vec_);
   }
 
@@ -75,25 +78,40 @@ class Param {
     argc_i = other.argc_i;
     argv_ = other.argv_;
     random_seed_ = other.random_seed_;  
+    seed_set_ = other.seed_set_;
     directly_called_ = other.directly_called_;
     help_ = other.help_;
     version_ = other.version_;
+    print_model_ = other.print_model_;
     std::swap(argv_vec_, other.argv_vec_);
     return *this;
   }
 
   void init() {
-    this->set_random_seed(-1);
+    this->seed_set_ = false;
+    this->random_seed_ = 0;
     this->set_help(false);
     this->set_version(false);
+    this->set_precision(6);
+    this->set_print_model(false);
     argc_i = 0;
   }
 
   // Getters and setters
   bool help() const { return help_; }
   bool version() const { return version_; }
+  bool read_init_genealogy() const { return this->read_init_genealogy_; }
   size_t random_seed() const { return random_seed_; }
-  void set_random_seed(const size_t seed) { this->random_seed_ = seed; }
+  size_t precision() const { return precision_; }
+  bool seed_is_set() const { return this->seed_set_; }
+  bool print_model() const { return this->print_model_; }
+
+  void set_precision ( const size_t p ) { this->precision_ = p; }
+  void set_random_seed(const size_t seed) { 
+    this->random_seed_ = seed;
+    this->seed_set_ = true; 
+  }
+  void set_print_model(const bool print_model) { print_model_ = print_model; }
 
   // Other methods
   void printHelp(std::ostream& stream);
@@ -116,8 +134,17 @@ class Param {
     if (ss.fail()) {
       throw std::invalid_argument(std::string("Failed to parse option: ") + argv_[argc_i]);
     }
+
     return input;
   }
+
+  // Read to double first and then cast to int to support scientific notation
+  size_t readNextInt() {
+    return readNextInput<double>();
+  }
+
+
+  std::vector < std::string > init_genealogy;
 
  private:
   Param(const Param &other);
@@ -128,10 +155,14 @@ class Param {
   int argc_;
   int argc_i;
   char * const* argv_;
-  size_t random_seed_;  
+  size_t seed_set_;
+  size_t random_seed_;
+  size_t precision_;
   bool directly_called_;
   bool help_;
   bool version_;
+  bool read_init_genealogy_;
+  bool print_model_;
   std::vector<char*> argv_vec_;
 };
 #endif

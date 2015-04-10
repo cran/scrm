@@ -1,7 +1,7 @@
 /*
  * scrm is an implementation of the Sequential-Coalescent-with-Recombination Model.
  * 
- * Copyright (C) 2013, 2014 Paul R. Staab, Sha (Joe) Zhu and Gerton Lunter
+ * Copyright (C) 2013, 2014 Paul R. Staab, Sha (Joe) Zhu, Dirk Metzler and Gerton Lunter
  * 
  * This file is part of scrm.
  * 
@@ -42,6 +42,7 @@
 #include <stdexcept>
 #include <cassert>
 #include <cmath>
+#include <iomanip>
 
 #include "summary_statistics/summary_statistic.h"
 
@@ -60,7 +61,6 @@ class Model
 #endif
    friend class Forest;
    friend class Param;
-   friend std::ostream& operator<< (std::ostream& stream, const Model& model);
 
    Model();
    Model(size_t sample_size);
@@ -188,8 +188,8 @@ class Model
     * @return The current unscaled, backwards migration rate.
     */
    double migration_rate(const size_t source, const size_t sink) const {
-     if (current_mig_rates_ == NULL) return default_mig_rate;
      if (sink == source) return 0.0;
+     if (current_mig_rates_ == NULL) return default_mig_rate;
      return current_mig_rates_->at( getMigMatrixIndex(source, sink) );  
    };
 
@@ -241,9 +241,9 @@ class Model
                              const double seq_position = 0);
 
    bool hasFixedTimeEvent(const double at_time) const {
-    if (single_mig_probs_list_.at(current_time_idx_) == NULL) return false; 
-    if (getCurrentTime() != at_time) return false;
-    return true;
+     if (single_mig_probs_list_.at(current_time_idx_) == NULL) return false; 
+     if (getCurrentTime() != at_time) return false;
+     return true;
    }
 
    size_t sample_size() const { return sample_times_.size(); };
@@ -289,7 +289,7 @@ class Model
    }
 
    void increaseTime() { 
-     if ( current_time_idx_ == change_times_.size() - 1) throw std::out_of_range("Model change times out of range");
+     if ( current_time_idx_ == change_times_.size() ) throw std::out_of_range("Model change times out of range");
      ++current_time_idx_;
 
      if ( pop_sizes_list_.at(current_time_idx_) != NULL ) 
@@ -305,6 +305,9 @@ class Model
    void increaseSequencePosition() {
     ++current_seq_idx_;
    }
+
+   size_t countChangeTimes() const { return change_times_.size(); }
+   size_t countChangePositions() const { return change_position_.size(); } 
   
    void print(std::ostream &os) const;
 
@@ -411,6 +414,10 @@ class Model
 
   void fillVectorList(std::vector<std::vector<double>*> &vector_list, const double default_value);
   void calcPopSizes();
+  void checkPopulation(const size_t pop) {
+    if (pop >= this->population_number()) 
+      throw std::invalid_argument("Invalid population"); 
+  }
 
   template <typename T>
   std::vector<T*> copyVectorList(const std::vector<T*> &source);
@@ -479,7 +486,7 @@ class Model
 
 
 
-std::ostream& operator<<(std::ostream& os, const Model& model); 
+std::ostream& operator<<(std::ostream& os, Model& model); 
 
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const std::vector<T> &vec) {
@@ -507,10 +514,17 @@ inline void Model::setRecombinationRate(double rate,
                                         const bool &scaled,
                                         const double seq_position) { 
 
-  if (rate < 0.0) throw std::invalid_argument("Recombination rate must be non-negative");
+  if (rate < 0.0) { 
+    throw std::invalid_argument("Recombination rate must be non-negative");
+  }
 
   if (scaled) rate /= 4.0 * default_pop_size; 
-  if (per_locus) rate /= loci_length()-1;
+  if (per_locus) {
+    if (loci_length() <= 1) {
+      throw std::invalid_argument("Locus length must be at least two");
+    }
+    rate /= loci_length()-1;
+  }
 
   recombination_rates_[addChangePosition(seq_position)] = rate; 
 }
