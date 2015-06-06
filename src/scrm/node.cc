@@ -33,7 +33,7 @@ Node::Node(double height, size_t label) { init(height, label); }
 Node::~Node() {}
 
 void Node::init(double height, size_t label) {
-  this->set_last_update(-1);
+  this->set_last_update(0);
   this->set_population(0);
 
   this->set_height(height);
@@ -61,7 +61,13 @@ void Node::change_child(Node* from, Node* to) {
   }
   else if ( this->second_child() == from )
     this->set_second_child(to);
-  else throw std::invalid_argument("Can't find child node to replace");
+  else {
+    dout << "Error when changing child of " << this << " form "
+         << from << " to " << to << std::endl;
+    dout << "Children are " << this->first_child() << " and "
+         << this->second_child() << std::endl;
+    throw std::invalid_argument("Can't find child node to replace");
+  }
 }
 
 void Node::remove_child(Node* child) {

@@ -1,6 +1,7 @@
-[![Build Status](https://travis-ci.org/scrm/scrm-r.svg?branch=master)](https://travis-ci.org/scrm/scrm-r)
-[![Coverage Status](https://coveralls.io/repos/scrm/scrm-r/badge.svg?branch=master)](https://coveralls.io/r/scrm/scrm-r)
-[![DOI](https://zenodo.org/badge/6744/scrm/scrm-r.png)](http://dx.doi.org/10.5281/zenodo.12351)
+[![Linux Build Status](https://travis-ci.org/scrm/scrm-r.svg?branch=master)](https://travis-ci.org/scrm/scrm-r)
+[![Windows Build Status](https://ci.appveyor.com/api/projects/status/octt2w69byiq198s/branch/master?svg=true)](https://ci.appveyor.com/project/paulstaab/scrm-r/branch/master)
+[![CRAN Status](http://www.r-pkg.org/badges/version/scrm)](http://cran.r-project.org/web/packages/scrm)
+[![CRAN RStudio Mirror Downloads](http://cranlogs.r-pkg.org/badges/scrm)](http://cran.r-project.org/web/packages/scrm/index.html)
 
 R Package scrm
 =======================
@@ -46,10 +47,22 @@ Help & Documentation
   [_scrm's Wiki_](https://github.com/paulstaab/scrm/wiki).
 
 
+Citation
+======================
+Please cite the following article when using _scrm_ in a publication:
+
+> Paul R. Staab, Sha Zhu, Dirk Metzler and Gerton Lunter.
+> **scrm: efficiently simulating long sequences using the approximated coalescent
+> with recombination**. 
+> Bioinformatics (2015) 31 (10): 1680-1682.
+> [doi:10.1093/bioinformatics/btu861](http://bioinformatics.oxfordjournals.org/content/31/10/1680).
+
+
 Bug Reports
 =======================
-Please report problems with _scrm_ using its 
-[issue tracker](https://github.com/scrm/scrm-r/issues). 
+Please report any problems via the [issue tracker](https://github.com/scrm/scrm-r/issues)
+or via email to `develop (at) paulstaab (dot) de`.
+
 Please include the version you are using and the exact command that 
 causes the problem including seed (if applicable) in the report.
-Also, feel free to suggest features you would like to see in _scrm_ there.
+Also, feel free to suggest features there.

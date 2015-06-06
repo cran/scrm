@@ -10,9 +10,9 @@
 
 <meta name="author" content="Paul Staab" />
 
-<meta name="date" content="2015-04-10" />
+<meta name="date" content="2015-06-06" />
 
-<title>scrm’s Arguments</title>
+<title>Command Line Arguments</title>
 
 
 
@@ -26,9 +26,9 @@
 
 
 <div id="header">
-<h1 class="title">scrm’s Arguments</h1>
+<h1 class="title">Command Line Arguments</h1>
 <h4 class="author"><em>Paul Staab</em></h4>
-<h4 class="date"><em>2015-04-10</em></h4>
+<h4 class="date"><em>2015-06-06</em></h4>
 </div>
 
 
@@ -62,7 +62,7 @@
 <h3>Recombination</h3>
 <ul>
 <li><code>-r &lt;R&gt; &lt;L&gt;</code>: Set the recombination rate to <em>R = 4<em>N0</em>r</em> and the length of all loci to L base pairs. <em>r</em> is expected number of recombinations on the locus per generation.</li>
-<li><code>-l &lt;l&gt;</code>: Use approximation rather than simulating the exact ARG. Within a sliding window of length <em>l</em> base pairs all linkage information is considered when building the genealogy. To positions outside of this window, some linkage is ignored. Setting <em>l=0</em> produces the SMC’ and <em>l=-1</em> or <em>l&gt;L</em> deactivates the approximation.</li>
+<li><code>-l &lt;l&gt;</code>: Use approximation rather than simulating the exact ARG. Within a sliding window of length <em>l</em> base pairs all linkage information is considered when building the genealogy. To positions outside of this window, some linkage is ignored. Setting <em>l=0</em> produces the SMC’ and <em>l=-1</em> deactivates the approximation. Since v1.6.0, it’s also possible to specify the window’s length in number of recombinations. To do so, use <code>-l &lt;x&gt;r</code>, where x is the number of recombinations (e.g. <code>-l 100r</code> for a window spanning 100 recombinations). Also starting with version 1.6.0 <strong>approximation is turned on by default</strong> using a conservative window length of 500 recombinations. For most applications, it should be fine to reduce this value to 100 - 250 recombinations if runtime is a critical factor.</li>
 </ul>
 </div>
 <div id="population-structure-migration" class="section level3">
@@ -138,7 +138,7 @@
 </div>
 <div id="sequence-specific-parameters" class="section level2">
 <h2>Sequence specific parameters</h2>
-<p>The following commands change the model parameters from at a sequence position <em>s</em>.</p>
+<p>The following commands change the model parameters from at a sequence position <em>s</em>. You should still set the initial rate with <code>-r</code> or <code>-t</code>, respectively, and then use the commands prefixed with <code>s</code> for all changes. Note that <code>-r</code> also takes the total length of the sequence as second argument, while <code>-sr</code> just has the rate as argument.</p>
 <ul>
 <li><code>-sr &lt;s&gt; &lt;R&gt;</code>: Set the recombination rate to <em>R</em> starting at position <em>s</em>.</li>
 <li><code>-st &lt;s&gt; &lt;$\theta$&gt;</code>: Set the mutation rate to <span class="math">\(\theta\)</span> starting at position <em>s</em>.</li>

@@ -9,6 +9,6 @@ sum_stats <- scrm('5 1 -r 1.5 100 -T')
 library(ape)
 trees <- read.tree(text = sum_stats$trees[[1]])
 
-## ----, fig.align='center'------------------------------------------------
+## ---- fig.align='center'-------------------------------------------------
 plot(trees, no.margin=TRUE)
 
