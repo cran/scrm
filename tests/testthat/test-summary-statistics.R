@@ -24,8 +24,8 @@ test_that("SegSites import works", {
   expect_false(is.null(col_names))
   expect_true(all(0 < col_names & col_names < 1))
 
-  expect_true(all(sum_stats$seg_sites[[1]] %in% c(0,1)))
-  expect_true(all(sum_stats$seg_sites[[2]] %in% c(0,1)))
+  expect_true(all(sum_stats$seg_sites[[1]] %in% c(0, 1)))
+  expect_true(all(sum_stats$seg_sites[[2]] %in% c(0, 1)))
 })
 
 test_that("TMRCA import works", {
@@ -35,7 +35,7 @@ test_that("TMRCA import works", {
   expect_equal(length(sum_stats$tmrca), 3)
 
   for (tmrca in sum_stats$tmrca) {
-    expect_is(tmrca, "matrix")
+    expect_is(tmrca, "data.frame")
     expect_equal(ncol(tmrca), 2)
     expect_that(nrow(tmrca), is_more_than(0))
     expect_true(all(tmrca > 0))
@@ -43,39 +43,36 @@ test_that("TMRCA import works", {
 })
 
 test_that("Newick Tree import works", {
-  sum_stats <- scrm("4 2 -r 1 100 -T")
-  expect_is(sum_stats, "list")
-  expect_is(sum_stats$trees, "list")
-  expect_equal(length(sum_stats$trees), 2)
+  stats <- scrm("4 2 -r 1 100 -T")
+  expect_is(stats, "list")
+  expect_is(stats$trees, "list")
+  expect_equal(length(stats$trees), 2)
 
-  for (tree in sum_stats$trees) {
-    expect_is(tree, "character")
-    expect_that(nchar(tree), is_more_than(3))
+  for (locus in stats$trees) {
+    for (tree in locus) {
+      expect_is(tree, "character")
+      expect_that(nchar(tree), is_more_than(3))
+      expect_true(grepl("^\\[[0-9]+\\]\\(.*\\);$", tree))
+    }
   }
-})
 
-test_that("Newick Tree import works", {
-  sum_stats <- scrm("4 2 -r 1 100 -T")
-  expect_is(sum_stats, "list")
-  expect_is(sum_stats$trees, "list")
-  expect_equal(length(sum_stats$trees), 2)
-
-  for (tree in sum_stats$trees) {
-    expect_is(tree, "character")
-    expect_that(nchar(tree), is_more_than(3))
-  }
+  expect_true(stats$trees[[1]][1] != stats$trees[[2]][1])
 })
 
 test_that("Oriented Forest import works", {
-  sum_stats <- scrm("4 4 -r 1 100 -O")
-  expect_is(sum_stats, "list")
-  expect_is(sum_stats$oriented_forest, "list")
-  expect_equal(length(sum_stats$oriented_forest), 4)
+  stats <- scrm("4 4 -r 1 100 -O")
+  expect_is(stats, "list")
+  expect_is(stats$oriented_forest, "list")
+  expect_equal(length(stats$oriented_forest), 4)
 
-  for (tree in sum_stats$oriented_forest) {
-    expect_is(tree, "character")
-    expect_that(nchar(tree), is_more_than(3))
+  for (locus in stats$oriented_forest) {
+    for (tree in locus) {
+      expect_is(tree, "character")
+      expect_that(nchar(tree), is_more_than(3))
+    }
   }
+
+  expect_true(stats$oriented_forest[[1]][1] != stats$oriented_forest[[2]][1])
 })
 
 test_that("Frequency spectrum import works", {
@@ -85,6 +82,6 @@ test_that("Frequency spectrum import works", {
   expect_equal(nrow(sum_stats$sfs), 5)
   expect_equal(ncol(sum_stats$sfs), 6)
   for (i in 1:nrow(sum_stats$sfs)) {
-    expect_equal(sum(sum_stats$sfs[i,]), ncol(sum_stats$seg_sites[[i]]))
+    expect_equal(sum(sum_stats$sfs[i, ]), ncol(sum_stats$seg_sites[[i]]))
   }
 })
