@@ -11,12 +11,12 @@
 #'
 #' @section Seeding:
 #' The R version of scrm uses random number from R's random generator.
-#' Therefore, the '-seed' argument of the command line version will be ignored,
+#' Therefore, the '-seed' argument of the command-line version will be ignored,
 #' and no seed is given in the output.
 #' Use the R function \code{\link{set.seed}} prior to calling this
-#' function to ensure reproduciblity of results.
+#' function to ensure reproducibility of results.
 #'
-#' @param args A string containing the command line arguments for scrm. Look at
+#' @param args A string containing the command-line arguments for scrm. Look at
 #'             scrms vignette for a description of available arguments.
 #' @param file If provided, scrm will additionally write it is output into
 #'             a file with the given file, using an ms-like text output.
@@ -28,7 +28,7 @@
 #' @keywords datagen
 #' @seealso
 #' \itemize{
-#'   \item \code{vignette('scrm-Arguments')} for an overview of commandline arguments and
+#'   \item \code{vignette('scrm-Arguments')} for an overview of command line arguments and
 #'   \item \code{vignette('scrm-TreesForApe')} for an example on using
 #'         genealogies simulated with \emph{scrm} with package 'ape'.
 #' }
@@ -44,18 +44,18 @@
 #' scrm('10 3 -r 400 1000000 -l 100000 -I 2 4 6 0.5 -t 300 -oSFS')$sfs
 #'
 scrm <- function(args, file = "") {
-    .Call('scrm_scrm', PACKAGE = 'scrm', args, file)
+    .Call('_scrm_scrm', PACKAGE = 'scrm', args, file)
 }
 
 test_RRG_sample <- function() {
-    .Call('scrm_test_RRG_sample', PACKAGE = 'scrm')
+    .Call('_scrm_test_RRG_sample', PACKAGE = 'scrm')
 }
 
 test_RRG_sampleUnitExpo <- function() {
-    .Call('scrm_test_RRG_sampleUnitExpo', PACKAGE = 'scrm')
+    .Call('_scrm_test_RRG_sampleUnitExpo', PACKAGE = 'scrm')
 }
 
 test_RRG_sampleExpoExpoLimit <- function(lambda, b, limit) {
-    .Call('scrm_test_RRG_sampleExpoExpoLimit', PACKAGE = 'scrm', lambda, b, limit)
+    .Call('_scrm_test_RRG_sampleExpoExpoLimit', PACKAGE = 'scrm', lambda, b, limit)
 }
 
