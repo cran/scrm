@@ -64,14 +64,13 @@ test_that("Oriented Forest import works", {
   expect_is(stats, "list")
   expect_is(stats$oriented_forest, "list")
   expect_equal(length(stats$oriented_forest), 4)
-
   for (locus in stats$oriented_forest) {
     for (tree in locus) {
       expect_is(tree, "character")
       expect_that(nchar(tree), is_more_than(3))
     }
   }
-
+  
   expect_true(stats$oriented_forest[[1]][1] != stats$oriented_forest[[2]][1])
 })
 
@@ -81,7 +80,7 @@ test_that("Frequency spectrum import works", {
   expect_is(sum_stats$sfs, "matrix")
   expect_equal(nrow(sum_stats$sfs), 5)
   expect_equal(ncol(sum_stats$sfs), 6)
-  for (i in 1:nrow(sum_stats$sfs)) {
-    expect_equal(sum(sum_stats$sfs[i, ]), ncol(sum_stats$seg_sites[[i]]))
+  for (i in seq_len(nrow(sum_stats$sfs))) {
+    expect_equal(sum(sum_stats$sfs[i,]), ncol(sum_stats$seg_sites[[i]]))
   }
 })
